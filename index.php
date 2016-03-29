@@ -115,7 +115,7 @@
 	<div class="container" id="mainc">
 	<div class="well">
 		<h4 class="text-center" id="hding">Stock Market Search</h4>
-		<form class="form-inline" role="form">
+		<form class="form-inline" role="form" id="stockform" method="GET" action="handle.php">
 		
 		<div class="row">
 			<div class="col-lg-3 col-md-4 col-sm-5 col-xs-12" id="labele">
@@ -125,14 +125,15 @@
 		
 			<div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" id="btng">
 				
-				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Get Quote</button>
+				<button type="submit" class="btn btn-primary" id="getquote"><span class="glyphicon glyphicon-search"></span> Get Quote</button>
 				
 				<button type="reset" class="btn btn-default" role="button"><span class="glyphicon glyphicon-refresh"></span> Clear</button></div>
 			
 			</div>
 
 		<div class="row">
-			<div class="col-lg-9"></div>
+			<div class="col-lg-3"></div>
+			<div class="col-lg-6"><p id="insertText"></p></div>
 			<div class="col-lg-3 col-xs-12" id="logo-mark">
 			Powered By: <a href="http://dev.markitondemand.com/MODApis/" target="_blank"><img src="mod-logo.png" id="rsize" width="130" height="25" ></div></a>
 			
@@ -143,7 +144,7 @@
 	<hr>
 	</div>
 
-	<div class="container">
+	<div class="container" >
 	<div id="myCarousel" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner" role="listbox">
       <div class="item active">
@@ -167,8 +168,8 @@
     </div>
     <div class="panel-body">
   
-	<table class="table table-striped">
-    <tbody>
+	<table class="table table-striped" id="resultTable">
+    
       <tr>
         <td>Symbol</td>
         <td>Company</td>
@@ -176,7 +177,9 @@
         <td>Change (Change Percent)</td>
         <td>Market Cap</td>
       </tr>
-    </tbody>
+
+
+    
   </table>
   </div>
     </div>
@@ -221,8 +224,31 @@
 					});
 				},
 				minLength: 0
-			})
-		;
+			});
+
+			$("#stockform").submit(function(event){
+				event.preventDefault();
+				var str = $("#stockname").val();
+				$.ajax({
+					url: "http://dev.markitondemand.com/api/v2/Lookup/jsonp",
+					dataType: "jsonp",
+					data: {
+						input: str
+					},
+					success: function(data){
+						if(data.length == 0){
+							$("#insertText").text("Select a valid entry").css("color","red").css("font-size","13px").css("padding-top","10px");
+						}
+						else{
+							$.get("handle.php",{sym:str},function(data){
+								var temp = $.parseJSON(data);
+							
+							});
+						}
+					}
+				});
+			});
+
 	});
 
 
