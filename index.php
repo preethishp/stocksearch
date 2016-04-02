@@ -49,6 +49,9 @@
 			$("#getquote").click(function(event){
 				event.preventDefault();
 				var str = $("#stockname").val();
+				if(str.length > 0){
+
+
 				$.ajax({
 					url: "http://dev.markitondemand.com/api/v2/Lookup/jsonp",
 					dataType: "jsonp",
@@ -138,10 +141,14 @@
 								cacheHold += "<tr><td>Opening Price</td><td>$ "+open+"</td></tr>";
 								cacheHold += "</table>";
 								$("#histChart").addClass('hidden');
+								var beforeRow = "<a href='#' id='fb'><img src='fblogo.png'/></a><a href='#' id='fav'><img src='favButtonOff.png'/></a>";
+								$("#titleStock").html("<p>Stock Details</p>");
+								$("#logos").html(beforeRow);
 								$("#quoteTableIn").html(cacheHold);
 
 								var chartReq = "<img src='http://chart.finance.yahoo.com/t?s="+data['Symbol']+"&lang=en-US&width=500&height=300'/> ";
 								$("#quoteTableChart").html(chartReq);
+
 								}
 								if($("#checkit1").hasClass('active')){
 									
@@ -543,10 +550,62 @@ function render(data_t) {
 								cacheHold += "<tr><td>Low Price</td><td>$ "+low+"</td></tr>";
 								cacheHold += "<tr><td>Opening Price</td><td>$ "+open+"</td></tr>";
 								cacheHold += "</table>";
+								var beforeRow = "<a href='#' id='fb'><img src='fblogo.png'/></a><a href='#' id='fav'><img src='favButtonOff.png'/></a>";
+								$("#titleStock").html("<p>Stock Details</p>");
+								$("#logos").html(beforeRow);
+								
 								$("#quoteTableIn").html(cacheHold);
 
 								var chartReq = "<img src='http://chart.finance.yahoo.com/t?s="+data['Symbol']+"&lang=en-US&width=500&height=300'/> ";
 								$("#quoteTableChart").html(chartReq);
+
+								$("#fb").click(function(event){
+			                   		event.preventDefault();
+			                   		//alert("user");
+			                   		$.ajaxSetup({ cache: true });
+  									$.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+    								FB.init({
+      										appId: '227365044287504',
+      										version: 'v2.5' // or v2.0, v2.1, v2.2, v2.3
+    								});
+
+    								FB.ui(
+ 										{
+  											method: 'share',
+  											href: 'http://dev.markitondemand.com/',
+  											picture: "http://chart.finance.yahoo.com/t?s="+data['Symbol']+"&lang=en-US&width=200&height=200",
+  											title: "Current Stock Price of "+data['Name']+" is $"+lp,
+  											description: "Stock Information of "+data['Name']+ " ("+data['Symbol']+")",
+  											caption: "LAST TRADE PRICE $ "+data['LastPrice'].toFixed(2)+", CHANGE: "+chng+" ("+chngper+"%)"
+										}, function(response){
+											if(response && !response.error_message){
+												alert("Posted Successfully");
+											}
+											else{
+												alert("Not Posted");
+											}
+										});
+
+    								/*FB.getLoginStatus(function(response) {
+  										if (response.status === 'connected') {
+    										console.log('Logged in.');
+    										//FB.ui();
+  										}
+  										else {
+    											FB.login();
+    											//FB.ui();
+  										}
+
+  										
+
+									});     */
+    								//$('#loginbutton,#feedbutton').removeAttr('disabled');
+
+    							
+    								//FB.getLoginStatus(updateStatusCallback);
+  									});
+			                   	});
+							
 							});
 			                   		});
 
@@ -555,6 +614,53 @@ function render(data_t) {
 			                   			console.log(news);
 			                   		});
 			                   	});
+
+			                   	$("#fb").click(function(event){
+			                   		event.preventDefault();
+			                   		//alert("user");
+			                   		$.ajaxSetup({ cache: true });
+  									$.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+    								FB.init({
+      										appId: '227365044287504',
+      										version: 'v2.5' // or v2.0, v2.1, v2.2, v2.3
+    								});
+
+    								FB.ui(
+ 										{
+  											method: 'share',
+  											href: 'http://dev.markitondemand.com/',
+  											picture: "http://chart.finance.yahoo.com/t?s="+data['Symbol']+"&lang=en-US&width=200&height=200",
+  											title: "Current Stock Price of "+data['Name']+" is $"+lp,
+  											description: "Stock Information of "+data['Name']+ " ("+data['Symbol']+")",
+  											caption: "LAST TRADE PRICE $ "+data['LastPrice'].toFixed(2)+", CHANGE: "+chng+" ("+chngper+"%)"
+										}, function(response){
+											if(response && !response.error_message){
+												alert("Posted Successfully");
+											}
+											else{
+												alert("Not Posted");
+											}
+										});
+
+    								/*FB.getLoginStatus(function(response) {
+  										if (response.status === 'connected') {
+    										console.log('Logged in.');
+    										//FB.ui();
+  										}
+  										else {
+    											FB.login();
+    											//FB.ui();
+  										}
+
+  										
+
+									});     */
+    								//$('#loginbutton,#feedbutton').removeAttr('disabled');
+
+    							
+    								//FB.getLoginStatus(updateStatusCallback);
+  									});
+			                   	});
 							
 							});
 
@@ -562,6 +668,7 @@ function render(data_t) {
 						}
 					}
 				});
+}
 			});
 
 			
@@ -806,6 +913,17 @@ function render(data_t) {
   </div>
   </div>
   <div id="quoteTable">
+
+  <div class="row">
+  <div class="col-lg-10" id="titleStock">
+
+  </div>
+
+
+  <div class="col-lg-2" id="logos">
+
+  </div>
+  </div>
 
   <div class="row">
   	<div class="col-lg-6" id="quoteTableIn">
